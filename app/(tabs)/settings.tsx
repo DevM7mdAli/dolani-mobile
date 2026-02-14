@@ -38,7 +38,7 @@ export default function SettingsScreen() {
             <View className="flex-row rounded-lg bg-muted p-1">
               <TouchableOpacity
                 onPress={() => i18n.changeLanguage('ar')}
-                className={`rounded px-4 py-1.5 ${i18n.language === 'ar' ? 'bg-primary shadow-sm' : ''}`}
+                className={`rounded px-4 py-1.5 ${i18n.language === 'ar' ? 'bg-primary' : ''}`}
               >
                 <Text
                   className={`font-medium ${i18n.language === 'ar' ? 'text-white' : 'text-muted-foreground'}`}
@@ -48,7 +48,7 @@ export default function SettingsScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => i18n.changeLanguage('en')}
-                className={`rounded px-4 py-1.5 ${i18n.language === 'en' ? 'bg-primary shadow-sm' : ''}`}
+                className={`rounded px-4 py-1.5 ${i18n.language === 'en' ? 'bg-primary' : ''}`}
               >
                 <Text
                   className={`font-medium ${i18n.language === 'en' ? 'text-white' : 'text-muted-foreground'}`}
@@ -72,7 +72,7 @@ export default function SettingsScreen() {
             <View className="flex-row rounded-lg bg-muted p-1">
               <TouchableOpacity
                 onPress={() => setIsDark(false)}
-                className={`flex-row items-center rounded px-4 py-1.5 ${!isDark ? 'bg-yellow-400 shadow-sm' : ''}`}
+                className={`flex-row items-center rounded px-4 py-1.5 ${!isDark ? 'bg-yellow-400' : ''}`}
               >
                 <Icon
                   icon={Sun}
@@ -87,7 +87,7 @@ export default function SettingsScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setIsDark(true)}
-                className={`flex-row items-center rounded px-4 py-1.5 ${isDark ? 'bg-slate-700 shadow-sm' : ''}`}
+                className={`flex-row items-center rounded px-4 py-1.5 ${isDark ? 'bg-slate-700' : ''}`}
               >
                 <Icon
                   icon={Moon}

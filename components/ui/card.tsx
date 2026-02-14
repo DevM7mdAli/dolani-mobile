@@ -10,10 +10,7 @@ export interface CardProps extends React.ComponentPropsWithoutRef<typeof View> {
 
 export function Card({ className, title, subtitle, children, ...props }: CardProps) {
   return (
-    <View
-      className={cn('rounded-xl border border-border bg-white p-4 shadow-sm', className)}
-      {...props}
-    >
+    <View className={cn('rounded-xl border border-border bg-white p-4', className)} {...props}>
       {(title || subtitle) && (
         <View className="mb-4">
           {title && <Text className="text-lg font-semibold text-foreground">{title}</Text>}
