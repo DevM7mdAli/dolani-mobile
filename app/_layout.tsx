@@ -9,12 +9,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import '@/utils/i18n';
+
 // Keep the splash screen visible while we load resources
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // Placeholder: add custom font entries here when ready
-  // e.g. { 'Inter-Regular': require('@/assets/fonts/Inter-Regular.ttf') }
   const [fontsLoaded, fontError] = useFonts({});
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
         </Stack>
         <StatusBar style="auto" />
       </SafeAreaProvider>
