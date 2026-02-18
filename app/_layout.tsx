@@ -2,14 +2,13 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 
 import '@/global.css';
+import '@/lib/i18n';
 import { queryClient } from '@/lib/query-client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-import '@/utils/i18n';
 
 // Keep the splash screen visible while we load resources
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +31,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(emergency)" />
         </Stack>
         <StatusBar style="auto" />
       </SafeAreaProvider>

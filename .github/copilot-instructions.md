@@ -8,8 +8,7 @@ You are a Senior Mobile Architect specializing in **React Native (Expo)**, **BLE
 - **Styling:** **NativeWind v4** (Tailwind CSS) + `clsx` & `tailwind-merge` for dynamic classes.
 - **State Management:** - **Client State:** `zustand` (UI, Auth, Settings).
   - **Server State:** `@tanstack/react-query` v5 + `axios` (Caching, Background updates).
-- **Storage:** - **Sensitive:** `expo-secure-store` (JWT tokens).
-  - **High-Performance:** `react-native-mmkv` (User preferences, Cached Map JSON).
+- **Storage:** **High-Performance:**`react-native-mmkv` (User preferences, Cached Map JSON).
 - **Lists:** `@shopify/flash-list` (Mandatory for Faculty Directory and Logs).
 - **Visuals:** `react-native-svg` (Map rendering) & `lucide-react-native` (Icons).
 - **Animations:** `react-native-reanimated` (Crucial for smooth "Blue Dot" movement).

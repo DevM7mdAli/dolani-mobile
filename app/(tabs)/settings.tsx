@@ -1,7 +1,17 @@
 import React from 'react';
-import { ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  DevSettings,
+  I18nManager,
+  ScrollView,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import { ChevronLeft, Globe, Info, Mail, Map, Moon, Shield, Sun } from 'lucide-react-native';
+import * as Updates from 'expo-updates';
+import { ChevronLeft, Globe, Info, Mail, Map } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,7 +21,33 @@ import { Icon } from '@/components/ui/icon';
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
-  const [isDark, setIsDark] = React.useState(false);
+
+  const changeLanguage = async (lang: 'ar' | 'en') => {
+    const isRTL = lang === 'ar';
+
+    // 1. Change text immediately
+    await i18n.changeLanguage(lang);
+
+    // 2. Only reload if layout direction actually needs to change
+    if (isRTL !== I18nManager.isRTL) {
+      I18nManager.allowRTL(isRTL);
+      I18nManager.forceRTL(isRTL);
+
+      // 3. Handle the Reload based on Environment
+      try {
+        if (__DEV__) {
+          // In Development: Use Native DevSettings
+          DevSettings.reload();
+        } else {
+          // In Production: Use Expo Updates
+          await Updates.reloadAsync();
+        }
+      } catch (e) {
+        // Fallback if both fail
+        Alert.alert('Restart Required', 'Please restart the app manually to apply changes.');
+      }
+    }
+  };
 
   return (
     <ScrollView
@@ -37,7 +73,7 @@ export default function SettingsScreen() {
           <View className="flex-row items-center justify-between border-b border-muted p-4">
             <View className="flex-row rounded-lg bg-muted p-1">
               <TouchableOpacity
-                onPress={() => i18n.changeLanguage('ar')}
+                onPress={() => changeLanguage('ar')}
                 className={`rounded px-4 py-1.5 ${i18n.language === 'ar' ? 'bg-primary' : ''}`}
               >
                 <Text
@@ -47,7 +83,7 @@ export default function SettingsScreen() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => i18n.changeLanguage('en')}
+                onPress={() => changeLanguage('en')}
                 className={`rounded px-4 py-1.5 ${i18n.language === 'en' ? 'bg-primary' : ''}`}
               >
                 <Text
@@ -64,48 +100,6 @@ export default function SettingsScreen() {
             </View>
             <View className="mr-3 rounded-full bg-blue-100 p-2">
               <Icon icon={Globe} size={20} className="text-blue-600" />
-            </View>
-          </View>
-
-          {/* Theme */}
-          <View className="flex-row items-center justify-between p-4">
-            <View className="flex-row rounded-lg bg-muted p-1">
-              <TouchableOpacity
-                onPress={() => setIsDark(false)}
-                className={`flex-row items-center rounded px-4 py-1.5 ${!isDark ? 'bg-yellow-400' : ''}`}
-              >
-                <Icon
-                  icon={Sun}
-                  size={14}
-                  className={!isDark ? 'text-yellow-900' : 'text-muted-foreground'}
-                />
-                <Text
-                  className={`ml-1 font-medium ${!isDark ? 'text-yellow-900' : 'text-muted-foreground'}`}
-                >
-                  {t('settings.light')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setIsDark(true)}
-                className={`flex-row items-center rounded px-4 py-1.5 ${isDark ? 'bg-slate-700' : ''}`}
-              >
-                <Icon
-                  icon={Moon}
-                  size={14}
-                  className={isDark ? 'text-white' : 'text-muted-foreground'}
-                />
-                <Text
-                  className={`ml-1 font-medium ${isDark ? 'text-white' : 'text-muted-foreground'}`}
-                >
-                  {t('settings.dark')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className="items-end">
-              <Text className="text-base font-semibold text-foreground">{t('settings.theme')}</Text>
-            </View>
-            <View className="mr-3 rounded-full bg-yellow-100 p-2">
-              <Icon icon={Sun} size={20} className="text-yellow-600" />
             </View>
           </View>
         </Card>
@@ -164,13 +158,6 @@ export default function SettingsScreen() {
             icon={Mail}
             title={t('settings.support')}
             subtitle="support@dolani.sa"
-            hasChevron
-          />
-          <View className="h-[1px] bg-muted" />
-          <SettingsRow
-            icon={Shield}
-            title={t('settings.privacyPolicy')}
-            subtitle="Privacy Policy"
             hasChevron
           />
         </Card>
