@@ -2,6 +2,15 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react-native';
 import { cssInterop } from 'nativewind';
 
+type IconType = LucideIcon;
+
+type IconProps = {
+  icon: IconType;
+  className?: string;
+  size?: number;
+  color?: string;
+} & React.ComponentProps<IconType>;
+
 function Icon({
   icon: IconComponent,
   className,
@@ -34,4 +43,4 @@ cssInterop(Icon, {
   },
 });
 
-export { Icon };
+export { Icon, type IconProps, type IconType };

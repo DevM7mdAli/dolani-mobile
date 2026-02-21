@@ -54,7 +54,7 @@ export default function HomeScreen() {
 
       <View className="-mt-14 px-5">
         {/* ── EMERGENCY BANNER ── */}
-        <TouchableOpacity activeOpacity={0.9}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/(emergency)')}>
           <Card className="mb-6 border-destructive bg-destructive p-5">
             <View className="flex-row items-center justify-between">
               <View className="h-14 w-14 items-center justify-center rounded-2xl bg-white/20">

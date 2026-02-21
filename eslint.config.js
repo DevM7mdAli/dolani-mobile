@@ -25,7 +25,6 @@ module.exports = defineConfig([
 
       // Senior Mobile Rules (Performance & Cleanliness)
       'react-native/no-unused-styles': 'error', // Remove dead styles
-      'react-native/no-inline-styles': 'warn', // Performance warning
       'react-native/no-color-literals': 'warn', // Enforce theme usage
 
       // General Code Quality
