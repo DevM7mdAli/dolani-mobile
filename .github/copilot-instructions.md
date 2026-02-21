@@ -47,7 +47,6 @@ utils/               # i18n.ts, distance-model.ts, math-trilateration.ts
 
 ### 3. Emergency Protocol
 
-- **State Trigger:** When\*\* **`emergency_mode` is active (via Zustand store), instantly switch NativeWind theme to** **`dark` (or a specific** **`emergency` variant) with** \***\*High-Contrast Red/White** colors.
 - **Routing:** Re-fetch path with\*\* **`?emergency=true`. Disable elevators. Show large animated arrows pointing strictly to** \*\*`EXIT`nodes.
 
 ## 🌍 Globalization & UX Best Practices

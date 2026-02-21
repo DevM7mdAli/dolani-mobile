@@ -23,5 +23,13 @@
     "titleBar.inactiveBackground": "#007fff99",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#007fff"
+  "peacock.color": "#007fff",
+  "i18n-ally.localesPaths": [
+    "lib/i18n",
+    "lib/i18n/locales",
+    "ios/Pods/ReactNativeDependencies/Headers/folly/lang",
+    "ios/Pods/Headers/Public/ReactNativeDependencies/folly/lang",
+    "ios/Pods/Headers/Private/ReactNativeDependencies/folly/lang",
+    "ios/Pods/ReactNativeDependencies/framework/packages/react-native/ReactNativeDependencies.xcframework/Headers/folly/lang"
+  ]
 }

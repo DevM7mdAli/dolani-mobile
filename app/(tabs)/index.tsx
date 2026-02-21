@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/ui/card';
+import { GridItem } from '@/components/ui/grid-item';
 import { Icon } from '@/components/ui/icon';
 
 export default function HomeScreen() {
@@ -114,29 +115,5 @@ export default function HomeScreen() {
         </Card>
       </View>
     </ScrollView>
-  );
-}
-
-function GridItem({
-  icon,
-  title,
-  subtitle,
-  onPress,
-}: {
-  icon: any;
-  title: string;
-  subtitle: string;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8} className="w-[48%]">
-      <Card className="h-36 items-center justify-center border-none">
-        <View className="mb-3 h-14 w-14 items-center justify-center rounded-2xl bg-primary">
-          <Icon icon={icon} size={24} className="text-white" />
-        </View>
-        <Text className="text-lg font-bold text-foreground">{title}</Text>
-        <Text className="text-xs text-muted-foreground">{subtitle}</Text>
-      </Card>
-    </TouchableOpacity>
   );
 }

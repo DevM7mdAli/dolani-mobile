@@ -1,3 +1,4 @@
+import type { Router } from 'expo-router';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
 import { Icon, type IconType } from '../ui/icon';
@@ -6,7 +7,7 @@ type HeaderProps = {
   iconHeader: IconType;
   arrowIcon: IconType;
   insetsNumber?: number;
-  router: { back: () => void };
+  router: Router;
 };
 export const Header = ({ iconHeader, router, arrowIcon, insetsNumber }: HeaderProps) => (
   <View
@@ -14,7 +15,10 @@ export const Header = ({ iconHeader, router, arrowIcon, insetsNumber }: HeaderPr
     style={{ paddingTop: insetsNumber }}
   >
     <View className="flex-1">
-      <TouchableOpacity onPress={() => router.back()} hitSlop={10}>
+      <TouchableOpacity
+        onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+        hitSlop={10}
+      >
         <Icon className="text-white" icon={arrowIcon} />
       </TouchableOpacity>
     </View>
