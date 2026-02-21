@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 
-import { Home, Map, Search, Settings, Users } from 'lucide-react-native';
+import { Home, Map, Search, Settings } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
@@ -44,13 +44,6 @@ export default function TabLayout() {
         options={{
           title: t('tabs.map'),
           tabBarIcon: ({ color }) => <Map color={color} size={22} />,
-        }}
-      />
-      <Tabs.Screen
-        name="faculty"
-        options={{
-          title: t('tabs.faculty'),
-          tabBarIcon: ({ color }) => <Users color={color} size={22} />,
         }}
       />
       <Tabs.Screen

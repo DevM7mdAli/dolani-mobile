@@ -87,7 +87,7 @@ export default function HomeScreen() {
             icon={Users}
             title={t('home.menuFaculty')}
             subtitle="Faculty"
-            onPress={() => router.push('/(tabs)/faculty')}
+            onPress={() => router.push('/(tabs)/search?filter=doctor')}
           />
           <GridItem
             icon={MapPin}

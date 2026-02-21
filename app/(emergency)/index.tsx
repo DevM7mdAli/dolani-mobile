@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Linking, ScrollView, StatusBar, Text, View } from 'react-native';
+import { Linking, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 
 import { AlertTriangleIcon, ArrowLeftIcon } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,6 +52,12 @@ const Index = () => {
               ))}
             </View>
           </View>
+          <TouchableOpacity
+            className="h-full justify-center rounded-2xl border-4 border-destructive-light bg-destructive"
+            onPress={() => router.push('/(tabs)/map')}
+          >
+            <Text className="text-center text-3xl">Navigate to the nearest exit</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
