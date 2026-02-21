@@ -45,41 +45,45 @@ export default function SearchScreen() {
           <Icon icon={SearchIcon} size={20} className="ml-2 text-white/70" />
         </View>
 
-        <Text className="mt-3 text-right text-sm text-white/70">
-          {t('search.roomCount', { count: filtered.length })}
-        </Text>
+        <View className="items-start">
+          <Text className="mt-3 text-start text-sm text-white/70">
+            {t('search.roomCount', { count: filtered.length })}
+          </Text>
+        </View>
       </View>
 
       {/* ── RESULTS ── */}
       <ScrollView
-        className="flex-1 px-5 pt-4"
+        className="flex-1 pt-4"
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        {filtered.map((room) => (
-          <Card key={room.id} className="mb-3 flex-row items-center justify-between p-4">
-            <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-xl bg-primary">
-              <Icon icon={Navigation} size={18} className="text-white" />
+        <View className="px-4">
+          {filtered.map((room) => (
+            <TouchableOpacity key={room.id}>
+              <Card className="mb-3 flex-row items-center justify-between p-4">
+                <View className="items-center">
+                  <View className="rounded-lg bg-muted px-3 py-1.5">
+                    <Text className="text-sm font-bold text-foreground">{room.code}</Text>
+                  </View>
+                </View>
+                <View className="flex-1 items-start px-3">
+                  <View className="flex-row items-center gap-2">
+                    <Text className="text-base font-bold text-foreground">
+                      {t(`search.${room.type}`)}
+                    </Text>
+                  </View>
+                  <Text className="text-xs text-muted-foreground">
+                    {t('search.floor', { floor: room.floor, building: room.building })}
+                  </Text>
+                </View>
+                <View className="h-10 w-10 items-center justify-center rounded-xl bg-primary">
+                  <Icon icon={Navigation} size={18} className="text-white" />
+                </View>
+              </Card>
             </TouchableOpacity>
-
-            <View className="flex-1 items-end px-3">
-              <View className="flex-row items-center gap-2">
-                <Text className="text-base font-bold text-foreground">
-                  {t(`search.${room.type}`)}
-                </Text>
-              </View>
-              <Text className="text-xs text-muted-foreground">
-                {t('search.floor', { floor: room.floor, building: room.building })}
-              </Text>
-            </View>
-
-            <View className="items-center">
-              <View className="rounded-lg bg-muted px-3 py-1.5">
-                <Text className="text-sm font-bold text-foreground">{room.code}</Text>
-              </View>
-            </View>
-          </Card>
-        ))}
+          ))}
+        </View>
 
         {filtered.length === 0 && (
           <View className="mt-12 items-center">
