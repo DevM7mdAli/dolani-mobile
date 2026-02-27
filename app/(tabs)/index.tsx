@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import { type RecentNavigation, useNavigationStore } from '@/store/useNavigationStore';
 import { HomeMenuItem } from '@/types/home';
 import { AlertTriangle, MapPin, Navigation, Search, Settings, Users } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { EmergencyBannerCard } from '@/components/home/emergency-banner';
 import { HeaderHome } from '@/components/home/header';
 import { LocationCard } from '@/components/home/location-card';
+import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { GridItem } from '@/components/ui/grid-item';
 
@@ -17,6 +19,10 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  /* ── Navigation store — recent history + current location ── */
+  const recentNavigations = useNavigationStore((s) => s.recentNavigations);
+  const currentLocationId = useNavigationStore((s) => s.currentLocationId);
 
   const menuItems: HomeMenuItem[] = useMemo(
     () => [
@@ -48,6 +54,15 @@ export default function HomeScreen() {
     [t],
   );
 
+  /* ── Current location display ── */
+  const currentLocationText = useMemo(() => {
+    if (!currentLocationId) return t('home.unknownLocation');
+    // If we have a recent nav entry matching, show that info
+    const recent = recentNavigations.find((r) => r.locationId === currentLocationId);
+    if (recent) return `${recent.buildingName}, Floor ${recent.floorNumber}`;
+    return t('home.sampleLocation');
+  }, [currentLocationId, recentNavigations, t]);
+
   return (
     <ScrollView
       className="flex-1 bg-background"
@@ -66,7 +81,7 @@ export default function HomeScreen() {
         {/* Location Card */}
         <LocationCard
           currentLocationLabel={t('home.currentLocation')}
-          currentLocation={t('home.sampleLocation')}
+          currentLocation={currentLocationText}
         />
       </View>
 
@@ -93,24 +108,43 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* ── PAST ACTIVITY ── */}
+        {/* ── PAST ACTIVITY (from MMKV-backed store) ── */}
         <View className="items-start">
           <Text className="mb-3 text-start text-sm font-medium text-muted-foreground">
             {t('home.pastActivity')}
           </Text>
         </View>
-        <Card className="flex-row items-center justify-between p-4">
-          <View className="rounded-lg bg-muted px-3 py-1">
-            <Text className="text-xs font-bold text-foreground">A201</Text>
-          </View>
-          <View className="flex-1 items-start px-3">
-            <Text className="text-base font-semibold text-foreground">{t('home.mockLabName')}</Text>
-            <Text className="text-xs text-muted-foreground">{t('home.mockLabLocation')}</Text>
-          </View>
-          <View className="rounded-full bg-green-100 px-2.5 py-0.5">
-            <Text className="text-xs font-semibold text-green-700">{t('common.available')}</Text>
-          </View>
-        </Card>
+
+        {recentNavigations.length === 0 ? (
+          <Card className="items-center p-4">
+            <Text className="text-sm text-muted-foreground">{t('home.noRecentActivity')}</Text>
+          </Card>
+        ) : (
+          recentNavigations.slice(0, 5).map((entry: RecentNavigation) => (
+            <TouchableOpacity
+              key={`${entry.locationId}-${entry.timestamp}`}
+              onPress={() => {
+                useNavigationStore.getState().startNavigation(entry.locationId);
+                router.push('/(tabs)/map');
+              }}
+            >
+              <Card className="mb-2 flex-row items-center justify-between p-4">
+                <View className="rounded-lg bg-muted px-3 py-1">
+                  <Text className="text-xs font-bold text-foreground">
+                    {entry.roomNumber ?? '—'}
+                  </Text>
+                </View>
+                <View className="flex-1 items-start px-3">
+                  <Text className="text-base font-semibold text-foreground">{entry.name}</Text>
+                  <Text className="text-xs text-muted-foreground">
+                    Floor {entry.floorNumber}, {entry.buildingName}
+                  </Text>
+                </View>
+                <Badge variant="success" label={t('common.navigate')} />
+              </Card>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
     </ScrollView>
   );

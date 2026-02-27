@@ -30,6 +30,7 @@ export const ar = {
       brandSubtitle: 'Campus Navigator',
       currentLocation: 'موقعك الحالي',
       sampleLocation: 'المبنى A، الطابق 1',
+      unknownLocation: 'الموقع غير معروف',
       emergencyExit: 'مخرج الطوارئ',
       menuSearch: 'البحث',
       menuNavigate: 'التنقّل',
@@ -38,6 +39,7 @@ export const ar = {
       pastActivity: 'النشاط السابق',
       mockLabName: 'مختبر علوم الحاسب',
       mockLabLocation: 'الطابق 2، الجناح الشرقي',
+      noRecentActivity: 'لا يوجد نشاط سابق',
     },
     search: {
       title: 'البحث عن غرفة',
@@ -48,6 +50,10 @@ export const ar = {
       lectureHall: 'قاعة محاضرات',
       computerLab: 'مختبر حاسب',
       navigateTo: 'انتقل',
+      noResults: 'لا توجد نتائج',
+      typeFilter: 'النوع',
+      buildingFilter: 'المبنى',
+      clearFilters: 'مسح الفلاتر',
     },
     room: {
       title: 'معلومات الغرفة',

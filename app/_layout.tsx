@@ -10,8 +10,26 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { useBeaconPositioning } from '@/hooks/useBeaconPositioning';
+
 // Keep the splash screen visible while we load resources
 SplashScreen.preventAutoHideAsync();
+
+/** Inner component that can use hooks requiring QueryClientProvider. */
+function AppInner() {
+  // Start BLE positioning app-wide — keeps `useNavigationStore.currentLocationId` up to date
+  useBeaconPositioning(true);
+
+  return (
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(emergency)" />
+      </Stack>
+      <StatusBar style="auto" />
+    </>
+  );
+}
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({});
@@ -29,11 +47,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(emergency)" />
-        </Stack>
-        <StatusBar style="auto" />
+        <AppInner />
       </SafeAreaProvider>
     </QueryClientProvider>
   );

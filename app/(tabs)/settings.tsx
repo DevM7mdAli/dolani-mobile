@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+import { useSettingsStore } from '@/store/useSettingsStore';
 import * as Updates from 'expo-updates';
 import { ChevronLeft, Globe, Info, Mail, Map } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
@@ -22,10 +23,20 @@ export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
 
+  /* ── Settings store (persisted to MMKV) ── */
+  const avoidElevators = useSettingsStore((s) => s.avoidElevators);
+  const avoidStairs = useSettingsStore((s) => s.avoidStairs);
+  const setAvoidElevators = useSettingsStore((s) => s.setAvoidElevators);
+  const setAvoidStairs = useSettingsStore((s) => s.setAvoidStairs);
+  const setLanguage = useSettingsStore((s) => s.setLanguage);
+
   const changeLanguage = async (lang: 'ar' | 'en') => {
     const isRTL = lang === 'ar';
 
-    // 1. Change text immediately
+    // 1. Persist to MMKV
+    setLanguage(lang);
+
+    // 2. Change text immediately
     await i18n.changeLanguage(lang);
 
     // 2. Only reload if layout direction actually needs to change
@@ -111,6 +122,8 @@ export default function SettingsScreen() {
         <Card className="mb-6 p-4">
           <View className="mb-3 flex-row items-center justify-between rounded-lg bg-muted/30 p-2">
             <Switch
+              value={avoidElevators}
+              onValueChange={setAvoidElevators}
               trackColor={{ false: '#e2e8f0', true: '#008080' }}
               thumbColor="#fff"
               ios_backgroundColor="#3e3e3e"
@@ -127,6 +140,8 @@ export default function SettingsScreen() {
 
           <View className="flex-row items-center justify-between rounded-lg bg-muted/30 p-2">
             <Switch
+              value={avoidStairs}
+              onValueChange={setAvoidStairs}
               trackColor={{ false: '#e2e8f0', true: '#008080' }}
               thumbColor="#fff"
               ios_backgroundColor="#3e3e3e"

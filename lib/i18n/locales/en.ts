@@ -30,6 +30,7 @@ export const en = {
       brandSubtitle: 'Campus Navigator',
       currentLocation: 'Current Location',
       sampleLocation: 'Building A, Floor 1',
+      unknownLocation: 'Location unknown',
       emergencyExit: 'Emergency Exit',
       menuSearch: 'Search',
       menuNavigate: 'Navigate',
@@ -38,6 +39,7 @@ export const en = {
       pastActivity: 'Past Activity',
       mockLabName: 'Computer Science Lab',
       mockLabLocation: 'Floor 2, East Wing',
+      noRecentActivity: 'No recent activity',
     },
     search: {
       title: 'Search Room',
@@ -48,6 +50,10 @@ export const en = {
       lectureHall: 'Lecture Hall',
       computerLab: 'Computer Lab',
       navigateTo: 'Navigate',
+      noResults: 'No results found',
+      typeFilter: 'Type',
+      buildingFilter: 'Building',
+      clearFilters: 'Clear Filters',
     },
     room: {
       title: 'Room Information',
