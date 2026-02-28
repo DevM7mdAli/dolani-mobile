@@ -73,7 +73,7 @@ export default function HomeScreen() {
       <View style={{ paddingTop: insets.top + 16 }} className="rounded-b-3xl bg-primary px-6 pb-24">
         <HeaderHome
           router={router}
-          applicationBrandName={t('home.brandName')}
+          applicationBrandName={t('common.appName')}
           mapPinIcon={MapPin}
           settingIcon={Settings}
         />

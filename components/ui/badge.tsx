@@ -12,7 +12,7 @@ export function Badge({ className, variant = 'default', label, ...props }: Badge
   return (
     <View
       className={cn(
-        'focus:ring-ring inline-flex items-center rounded-full border px-2.5 py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'focus:ring-ring flex items-center rounded-full border px-2.5 py-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2',
         {
           'border-transparent bg-primary': variant === 'default',
           'border-transparent bg-secondary': variant === 'secondary',

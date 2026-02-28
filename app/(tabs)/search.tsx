@@ -13,8 +13,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 
-import { useFacultySearch } from '@/hooks/useFaculty';
-import { useBuildings, useLocations } from '@/hooks/useLocations';
+import { useFaculty } from '@/hooks/useFaculty';
+import { useBuildings, useInfiniteLocations } from '@/hooks/useLocations';
 
 /* ── Location type labels ── */
 
@@ -62,7 +62,6 @@ export default function SearchScreen() {
   const [selectedType, setSelectedType] = useState<LocationType | undefined>();
   const [selectedBuildingId, setSelectedBuildingId] = useState<number | undefined>();
   const [showFilters, setShowFilters] = useState(false);
-  const [page, setPage] = useState(1);
 
   /* ── Navigation store ── */
   const startNavigation = useNavigationStore((s) => s.startNavigation);
@@ -70,31 +69,31 @@ export default function SearchScreen() {
 
   /* ── Debounce search input ── */
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDebouncedQuery(query);
-      setPage(1);
-    }, 400);
+    const timeout = setTimeout(() => setDebouncedQuery(query), 400);
     return () => clearTimeout(timeout);
   }, [query]);
 
   /* ── Data hooks ── */
-  const locationsQuery = useLocations({
+  const locationsQuery = useInfiniteLocations({
     search: debouncedQuery || undefined,
     type: selectedType,
     buildingId: selectedBuildingId,
-    page,
     limit: 20,
   });
 
-  const facultyQuery = useFacultySearch(debouncedQuery);
+  // useFaculty shows all when query is empty, filters when typing
+  const facultyQuery = useFaculty({
+    search: debouncedQuery || undefined,
+    limit: 20,
+  });
   const buildingsQuery = useBuildings();
 
-  const locations = locationsQuery.data?.data ?? [];
-  const totalLocations = locationsQuery.data?.meta.total ?? 0;
-  const totalPages = locationsQuery.data?.meta.totalPages ?? 1;
-  const professors = facultyQuery.data ?? [];
+  // Flatten all infinite-query pages into a single array
+  const locations = locationsQuery.data?.pages.flatMap((p) => p.data) ?? [];
+  const totalLocations = locationsQuery.data?.pages[0]?.meta.total ?? 0;
+  const professors = facultyQuery.data?.data ?? [];
 
-  /* ── Navigate to a location ── */
+  /* ── Navigate to a location (from nav icon — goes straight to map) ── */
   const navigateToLocation = useCallback(
     (loc: Location) => {
       startNavigation(loc.id);
@@ -126,7 +125,6 @@ export default function SearchScreen() {
   const clearFilters = useCallback(() => {
     setSelectedType(undefined);
     setSelectedBuildingId(undefined);
-    setPage(1);
   }, []);
 
   const hasActiveFilters = selectedType || selectedBuildingId;
@@ -134,7 +132,11 @@ export default function SearchScreen() {
   /* ── Render a location card ── */
   const renderLocationItem = useCallback(
     ({ item }: { item: Location }) => (
-      <TouchableOpacity className="px-4" onPress={() => navigateToLocation(item)}>
+      <TouchableOpacity
+        className="px-4"
+        onPress={() => router.push(`/search/${item.id}`)}
+        activeOpacity={0.7}
+      >
         <Card className="mb-3 flex-row items-center justify-between p-4">
           <View className="items-center">
             <View className="rounded-lg bg-muted px-3 py-1.5">
@@ -155,13 +157,21 @@ export default function SearchScreen() {
               })}
             </Text>
           </View>
-          <View className="h-10 w-10 items-center justify-center rounded-xl bg-primary">
+          {/* Nav icon: separate touchable so it doesn't bubble to the card press */}
+          <TouchableOpacity
+            hitSlop={8}
+            onPress={(e) => {
+              e.stopPropagation();
+              navigateToLocation(item);
+            }}
+            className="h-10 w-10 items-center justify-center rounded-xl bg-primary"
+          >
             <Icon icon={Navigation} size={18} className="text-white" />
-          </View>
+          </TouchableOpacity>
         </Card>
       </TouchableOpacity>
     ),
-    [navigateToLocation, t],
+    [navigateToLocation, router, t],
   );
 
   /* ── Render a professor card ── */
@@ -208,12 +218,12 @@ export default function SearchScreen() {
     [navigateToFaculty, t],
   );
 
-  /* ── Pagination ── */
+  /* ── Pagination: fetch next page (appends via useInfiniteQuery) ── */
   const handleLoadMore = useCallback(() => {
-    if (page < totalPages && !locationsQuery.isFetching) {
-      setPage((p) => p + 1);
+    if (locationsQuery.hasNextPage && !locationsQuery.isFetchingNextPage) {
+      locationsQuery.fetchNextPage();
     }
-  }, [page, totalPages, locationsQuery.isFetching]);
+  }, [locationsQuery]);
 
   const isLoading = mode === 'rooms' ? locationsQuery.isLoading : facultyQuery.isLoading;
 
@@ -279,7 +289,9 @@ export default function SearchScreen() {
           <Text className="mt-2 text-start text-sm text-white/70">
             {mode === 'rooms'
               ? t('search.roomCount', { count: totalLocations })
-              : t('faculty.memberCount', { count: professors.length })}
+              : t('faculty.memberCount', {
+                  count: facultyQuery.data?.meta.total ?? professors.length,
+                })}
           </Text>
         </View>
       </View>
@@ -346,10 +358,10 @@ export default function SearchScreen() {
           showsVerticalScrollIndicator={false}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
-          refreshing={locationsQuery.isRefetching}
+          refreshing={locationsQuery.isRefetching && !locationsQuery.isFetchingNextPage}
           onRefresh={() => locationsQuery.refetch()}
           ListFooterComponent={
-            locationsQuery.isFetching && page > 1 ? (
+            locationsQuery.isFetchingNextPage ? (
               <ActivityIndicator size="small" color="#008080" className="py-4" />
             ) : null
           }
@@ -357,7 +369,7 @@ export default function SearchScreen() {
             <View className="mt-12 items-center">
               <Icon icon={SearchIcon} size={48} className="mb-3 text-muted-foreground" />
               <Text className="text-center text-base text-muted-foreground">
-                {debouncedQuery ? t('common.error') : t('common.search') + '…'}
+                {t('search.noResults')}
               </Text>
             </View>
           }
@@ -375,7 +387,7 @@ export default function SearchScreen() {
             <View className="mt-12 items-center">
               <Icon icon={Users} size={48} className="mb-3 text-muted-foreground" />
               <Text className="text-center text-base text-muted-foreground">
-                {debouncedQuery.length >= 2 ? t('common.error') : t('faculty.searchPlaceholder')}
+                {t('search.noResults')}
               </Text>
             </View>
           }

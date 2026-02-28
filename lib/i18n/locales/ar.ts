@@ -16,6 +16,8 @@ export const ar = {
       navigate: 'انتقل',
       rooms: 'الغرف',
       members: 'الأعضاء',
+      faculty: 'أعضاء هيئة التدريس',
+      map: 'الخريطة',
       poweredBy: 'Powered by Dolani',
     },
     tabs: {
@@ -65,6 +67,7 @@ export const ar = {
       microphone: 'ميكروفون',
       wifi: 'واي فاي',
       navigateToRoom: 'انتقل إلى الغرفة',
+      share: 'مشاركة',
     },
     faculty: {
       title: 'أعضاء هيئة التدريس',

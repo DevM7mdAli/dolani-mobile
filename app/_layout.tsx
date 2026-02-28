@@ -25,6 +25,7 @@ function AppInner() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(emergency)" />
+        <Stack.Screen name="search/[id]" />
       </Stack>
       <StatusBar style="auto" />
     </>

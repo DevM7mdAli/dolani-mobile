@@ -5,8 +5,8 @@ import {
   getLocationById,
   getLocations,
 } from '@/services/locations';
-import type { LocationQueryParams } from '@/types/location';
-import { useQuery } from '@tanstack/react-query';
+import type { Location, LocationQueryParams, PaginatedResponse } from '@/types/location';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 /* ── Query key factory ── */
 
@@ -27,6 +27,17 @@ export function useLocations(params: LocationQueryParams = {}) {
   return useQuery({
     queryKey: locationKeys.list(params),
     queryFn: () => getLocations(params),
+  });
+}
+
+/** Infinite-scroll variant — accumulates pages, use `.pages.flatMap(p => p.data)` */
+export function useInfiniteLocations(params: Omit<LocationQueryParams, 'page'> = {}) {
+  return useInfiniteQuery<PaginatedResponse<Location>, Error>({
+    queryKey: [...locationKeys.lists(), 'infinite', params] as const,
+    queryFn: ({ pageParam }) => getLocations({ ...params, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (last) =>
+      last.meta.page < last.meta.totalPages ? last.meta.page + 1 : undefined,
   });
 }
 

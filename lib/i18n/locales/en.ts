@@ -16,6 +16,8 @@ export const en = {
       navigate: 'Navigate',
       rooms: 'Rooms',
       members: 'Members',
+      faculty: 'Faculty',
+      map: 'Map',
       poweredBy: 'Powered by Dolani',
     },
     tabs: {
@@ -65,6 +67,7 @@ export const en = {
       microphone: 'Microphone',
       wifi: 'Wi-Fi',
       navigateToRoom: 'Navigate to Room',
+      share: 'Share',
     },
     faculty: {
       title: 'Faculty Members',
